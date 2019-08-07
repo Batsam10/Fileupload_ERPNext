@@ -16,6 +16,8 @@ class Test(Document):
 
 @frappe.whitelist()
 def attach_file_to_project(filedata, project_name):
+    frappe.msgprint(_("Tapinda refresh after this message"))
+    frappe.msgprint(_("filedata"))
     if filedata:
         fd_json = json.loads(filedata)
         fd_list = list(fd_json["files_data"])
@@ -31,8 +33,6 @@ def attach_file_to_project(filedata, project_name):
         frappe.msgprint(_("Error. Please contact Administrator!!!!"))
         #return ""
 
-
-
 @frappe.whitelist()
 def enqueue_attach_file_to_project(filedata, project_name):
-    enqueue("quality_management_system.process.doctype.test.test.attach_file_to_project",now=True, filedata=filedata, project_name=project_name)
+    enqueue("fileupload.file_upload.doctype.test.test.attach_file_to_project",queue='long',is_async=False, now=True, filedata=filedata, project_name=project_name)

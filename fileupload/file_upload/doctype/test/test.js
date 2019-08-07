@@ -3,7 +3,6 @@
 
 function setupReader(file, input) {
       var name = file.name;
-      alert(name);
       var reader = new FileReader();
       reader.onload = function(e) {
       input.filedata.files_data.push({
@@ -19,14 +18,12 @@ function setupReader(file, input) {
 
 frappe.ui.form.on('Test', {
   refresh: function(frm){//figure out how to restrict  ot images
+    var filedata  =$(".input_file").prop('filedata');
+    var projname = cur_frm.doc.name;
+    $(".output").attr("src",frappe.model.get_value("Test",projname,"image_url"));
     var html_string_placeholder = '<input class="input_file" type="file" style="display: none;" multiple>';
     cur_frm.set_df_property('input_file', 'options', html_string_placeholder);
     cur_frm.refresh_field('upload_file_placeholder');
-    //actual uploading
-    var filedata  =$(".input_file").prop('filedata');
-    var projname = cur_frm.doc.name;
-
-    $(".output").attr("src",frappe.model.get_value("Test",projname,"image_url"));
     },
 
    select_file: function(frm){
@@ -58,8 +55,9 @@ frappe.ui.form.on('Test', {
       var filedata  =$(".input_file").prop('filedata');
       var projname = cur_frm.doc.name;
       if(filedata){
+         frappe.msgprint(__("This is when the Frappe call happens. try refressh page"));
         frappe.call({
-          method: "quality_management_system.process.doctype.test.test.enqueue_attach_file_to_project",
+          method: "fileupload.file_upload.doctype.test.test.attach_file_to_project",
           aysnc: false,
           args: {
                   "filedata": filedata,
